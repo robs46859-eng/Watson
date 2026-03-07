@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Captivate | AI Systems for MedSpa Growth</title>
+  <meta
+    name="description"
+    content="Captivate builds AI-powered systems for MedSpa owners to automate bookings, retention, and front-desk operations."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            char: "#0A0F14",
+            panel: "#111820",
+            rose: "#E8A598",
+            teal: "#00C9B8"
+          },
+          fontFamily: {
+            sans: ["DM Sans", "sans-serif"],
+            display: ["Playfair Display", "serif"]
+          },
+          boxShadow: {
+            glass: "0 10px 30px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.06)",
+            tealGlow: "0 0 0 1px rgba(0,201,184,0.45), 0 0 40px rgba(0,201,184,0.28)"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      background: #0a0f14;
+      color: #e5e7eb;
+      overflow-x: hidden;
+    }
+    .label-wide {
+      letter-spacing: 0.18em;
+    }
+    .glass {
+      background: rgba(17, 24, 32, 0.7);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .mesh-wrap {
+      position: absolute;
+      inset: -20% -10%;
+      pointer-events: none;
+      filter: blur(45px);
+      opacity: 0.36;
+      z-index: 0;
+    }
+    .mesh {
+      position: absolute;
+      width: 45vw;
+      height: 45vw;
+      border-radius: 9999px;
+      mix-blend-mode: screen;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    .mesh.one {
+      background: radial-gradient(circle at 30% 30%, rgba(0, 201, 184, 0.8), rgba(0, 201, 184, 0));
+      left: 5%;
+      top: 10%;
+    }
+    .mesh.two {
+      background: radial-gradient(circle at 50% 30%, rgba(232, 165, 152, 0.7), rgba(232, 165, 152, 0));
+      right: 8%;
+      top: 0;
+      animation-delay: 2s;
+    }
+    .mesh.three {
+      background: radial-gradient(circle at 40% 50%, rgba(0, 201, 184, 0.5), rgba(0, 201, 184, 0));
+      right: 25%;
+      bottom: 0;
+      animation-delay: 4s;
+    }
+    @keyframes drift {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+      100% {
+        transform: translate(4vw, -3vh) scale(1.14);
+      }
+    }
+    .tab-panel {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .road-step {
+      opacity: 0;
+      transform: translateX(18px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .road-step.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  </style>
+</head>
+<body class="font-sans antialiased">
+  <header class="fixed inset-x-0 top-0 z-50 px-4 pt-4">
+    <nav class="mx-auto max-w-7xl glass rounded-2xl shadow-glass">
+      <div class="flex items-center justify-between px-4 py-3 md:px-6">
+        <a href="#top" class="flex items-center gap-3">
+          <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-rose/90 to-teal/80 p-0.5">
+            <div class="flex h-full w-full items-center justify-center rounded-[10px] bg-char text-xs font-bold tracking-[0.2em] text-white">
+              C
+            </div>
+          </div>
+          <div>
+            <p class="text-sm label-wide text-slate-300">CAPTIVATE</p>
+            <p class="text-xs text-slate-400">AI MedSpa Systems</p>
+          </div>
+        </a>
+        <button
+          id="menuToggle"
+          class="md:hidden rounded-lg border border-white/15 p-2 text-slate-300 hover:text-white"
+          aria-label="Toggle menu"
+        >
+          <i data-lucide="menu"></i>
+        </button>
+        <div class="hidden items-center gap-3 md:flex">
+          <a
+            href="#"
+            class="rounded-full border border-white/20 px-4 py-2 text-sm text-slate-200 transition hover:border-rose/60 hover:text-white"
+          >
+            Client Login
+          </a>
+          <a
+            href="#calculator"
+            class="rounded-full bg-rose px-4 py-2 text-sm font-semibold text-char transition hover:brightness-110"
+          >
+            Book Free Audit
+          </a>
+        </div>
+      </div>
+      <div id="mobileMenu" class="hidden border-t border-white/10 px-4 pb-4 pt-3 md:hidden">
+        <div class="flex flex-col gap-2">
+          <a
+            href="#"
+            class="rounded-lg border border-white/15 px-4 py-2 text-sm text-slate-200"
+          >
+            Client Login
+          </a>
+          <a
+            href="#calculator"
+            class="rounded-lg bg-rose px-4 py-2 text-sm font-semibold text-char"
+          >
+            Book Free Audit
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="relative overflow-hidden px-4 pt-32 md:pt-36">
+      <div class="mesh-wrap">
+        <div class="mesh one"></div>
+        <div class="mesh two"></div>
+        <div class="mesh three"></div>
+      </div>
+      <div class="relative z-10 mx-auto grid max-w-7xl gap-8 pb-16 md:grid-cols-2 md:items-center md:pb-24">
+        <div>
+          <p class="label-wide text-xs text-rose/90">AUTOMATION FOR MEDSPA OWNERS</p>
+          <h1 class="mt-4 font-display text-5xl leading-tight text-white md:text-6xl">
+            Your MedSpa.
+            <span class="text-rose">Running Itself.</span>
+          </h1>
+          <p class="mt-6 max-w-xl text-lg text-slate-300">
+            We build AI systems that handle your bookings, follow-ups, and client retention — so you can focus on treatments, not admin.
+          </p>
+          <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <a
+              href="#calculator"
+              class="rounded-full bg-teal px-6 py-3 font-semibold text-char transition hover:brightness-110"
+            >
+              See How It Works →
+            </a>
+            <p class="text-sm text-slate-400">Your front desk doesn't sleep. Neither does ours.</p>
+          </div>
+        </div>
+        <div class="glass rounded-3xl p-5 shadow-glass">
+          <p class="label-wide text-xs text-slate-400">TREATMENT FLOOR FLOW MAP</p>
+          <svg viewBox="0 0 500 320" class="mt-4 w-full rounded-2xl bg-char/60 p-4">
+            <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="24" y="20" width="452" height="280" rx="20" stroke="rgba(255,255,255,0.18)" />
+              <rect x="44" y="44" width="130" height="92" rx="12" stroke="#00C9B8" stroke-opacity="0.55" />
+              <rect x="188" y="44" width="130" height="92" rx="12" stroke="#E8A598" stroke-opacity="0.7" />
+              <rect x="332" y="44" width="124" height="92" rx="12" stroke="#00C9B8" stroke-opacity="0.55" />
+              <rect x="44" y="152" width="200" height="128" rx="12" stroke="rgba(255,255,255,0.35)" />
+              <rect x="258" y="152" width="198" height="128" rx="12" stroke="rgba(255,255,255,0.35)" />
+              <path d="M174 90h14m130 0h14M144 152v-16m228 16v-16" stroke="rgba(255,255,255,0.28)" />
+              <path d="M96 214h95m215 0h-96" stroke="#E8A598" stroke-opacity="0.55" />
+              <circle cx="110" cy="90" r="5" fill="#00C9B8" />
+              <circle cx="254" cy="90" r="5" fill="#E8A598" />
+              <circle cx="394" cy="90" r="5" fill="#00C9B8" />
+              <circle cx="96" cy="214" r="5" fill="#E8A598" />
+              <circle cx="404" cy="214" r="5" fill="#00C9B8" />
+            </g>
+          </svg>
+          <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+            <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+              <p class="text-slate-400">Automated Touchpoints</p>
+              <p class="mt-1 font-semibold text-white">24 / 7</p>
+            </div>
+            <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+              <p class="text-slate-400">Reply Latency</p>
+              <p class="mt-1 font-semibold text-white">&lt; 90 sec</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="calculator" class="px-4 pb-40 pt-8 md:pb-14">
+      <div class="mx-auto max-w-7xl rounded-3xl border border-white/10 bg-panel/75 p-6 md:p-8">
+        <div class="mb-6">
+          <p class="label-wide text-xs text-teal/90">REVENUE LEAK CALCULATOR</p>
+          <h2 class="mt-2 font-display text-3xl text-white md:text-4xl">
+            Find Out What Manual Admin Is Costing You
+          </h2>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-3">
+          <div class="rounded-2xl border border-white/10 bg-char/60 p-4">
+            <div class="flex items-center justify-between">
+              <label for="bookings" class="text-sm text-slate-300">Monthly client bookings</label>
+              <span id="bookingsValue" class="text-sm font-semibold text-white">220</span>
+            </div>
+            <input
+              id="bookings"
+              type="range"
+              min="50"
+              max="500"
+              value="220"
+              class="mt-4 w-full accent-teal"
+            />
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-char/60 p-4">
+            <div class="flex items-center justify-between">
+              <label for="noShowRate" class="text-sm text-slate-300">No-show / cancellation rate</label>
+              <span id="noShowRateValue" class="text-sm font-semibold text-white">16%</span>
+            </div>
+            <input
+              id="noShowRate"
+              type="range"
+              min="5"
+              max="40"
+              value="16"
+              class="mt-4 w-full accent-rose"
+            />
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-char/60 p-4">
+            <div class="flex items-center justify-between">
+              <label for="adminHours" class="text-sm text-slate-300">Hours/week spent on admin tasks</label>
+              <span id="adminHoursValue" class="text-sm font-semibold text-white">12 hrs</span>
+            </div>
+            <input
+              id="adminHours"
+              type="range"
+              min="2"
+              max="30"
+              value="12"
+              class="mt-4 w-full accent-teal"
+            />
+          </div>
+        </div>
+
+        <div
+          id="roiResultCard"
+          class="sticky bottom-4 left-4 right-4 z-30 rounded-2xl border border-rose/40 bg-char/95 p-4 shadow-[0_0_35px_rgba(232,165,152,0.2)] md:static md:mt-8 md:rounded-3xl md:border-white/10 md:bg-char/70 md:p-6"
+        >
+          <p class="label-wide text-xs text-slate-400">ESTIMATED ANNUAL REVENUE LOSS</p>
+          <p class="mt-2 text-3xl font-bold text-rose md:text-5xl">$<span id="revenueLoss">0</span></p>
+          <p class="mt-2 text-xs text-slate-500">
+            Projection includes no-show leakage and front-desk admin overhead.
+          </p>
+          <button
+            id="recoverCta"
+            class="mt-4 max-h-0 w-full overflow-hidden rounded-full bg-gradient-to-r from-rose to-teal px-6 text-center text-sm font-semibold text-char opacity-0 transition-all duration-500 md:w-auto md:px-8 md:py-3"
+          >
+            Recover This Revenue → Book Your Audit
+          </button>
+        </div>
+
+        <div
+          id="calendarWrap"
+          class="mt-8 rounded-2xl border border-teal/35 bg-char/60 p-4 opacity-0 transition-opacity duration-500 hidden"
+        >
+          <p class="mb-3 text-sm font-medium text-teal">
+            You're pre-qualified. Book your strategy call:
+          </p>
+          <iframe
+            id="calendlyFrame"
+            title="Calendly strategy call"
+            data-src="https://calendly.com/calendly-demo/30min?hide_gdpr_banner=1"
+            class="h-[620px] w-full rounded-xl border border-white/10"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="px-4 py-16">
+      <div class="mx-auto max-w-7xl">
+        <div class="mb-8">
+          <p class="label-wide text-xs text-rose/90">CORE SYSTEMS</p>
+          <h2 class="mt-2 font-display text-3xl text-white md:text-4xl">Stop Buying Software. Start Building Systems.</h2>
+        </div>
+
+        <div class="rounded-3xl border border-white/10 bg-panel/70 p-4 md:p-6">
+          <div class="mb-6 flex flex-wrap gap-2">
+            <button class="service-tab rounded-full border border-white/15 px-4 py-2 text-sm text-slate-200 transition" data-tab="0">
+              1 Booking &amp; Intake Automation
+            </button>
+            <button class="service-tab rounded-full border border-white/15 px-4 py-2 text-sm text-slate-200 transition" data-tab="1">
+              2 Retention &amp; Reactivation
+            </button>
+            <button class="service-tab rounded-full border border-white/15 px-4 py-2 text-sm text-slate-200 transition" data-tab="2">
+              3 Front Desk Ops System
+            </button>
+          </div>
+
+          <div class="relative min-h-[320px]">
+            <article class="tab-panel relative grid gap-6 transition-opacity duration-300 md:grid-cols-2" data-panel="0">
+              <div class="glass rounded-2xl p-5">
+                <i data-lucide="calendar-check-2" class="h-8 w-8 text-teal"></i>
+                <h3 class="mt-4 text-xl font-semibold text-white">Booking &amp; Intake Automation</h3>
+                <p class="mt-2 text-slate-400">AI that books, confirms, and follows up with clients 24/7.</p>
+                <div class="mt-4 rounded-xl bg-char/70 p-4 text-sm text-slate-300">
+                  Automated reminders and intake sequencing reduce schedule gaps before they happen.
+                </div>
+              </div>
+              <div class="rounded-2xl border border-white/10 bg-char/55 p-5">
+                <ul class="space-y-3 text-slate-200">
+                  <li>• 24/7 booking confirmations via SMS + email.</li>
+                  <li>• Smart intake form routing by treatment type.</li>
+                  <li>• Follow-up prompts that reduce no-shows before chair time is lost.</li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="tab-panel pointer-events-none absolute inset-0 grid translate-y-3 gap-6 opacity-0 transition-opacity duration-300 md:grid-cols-2" data-panel="1">
+              <div class="glass rounded-2xl p-5">
+                <i data-lucide="refresh-cw" class="h-8 w-8 text-rose"></i>
+                <h3 class="mt-4 text-xl font-semibold text-white">Retention &amp; Reactivation</h3>
+                <p class="mt-2 text-slate-400">Automated campaigns that bring lapsed clients back.</p>
+                <div class="mt-4 rounded-xl bg-char/70 p-4 text-sm text-slate-300">
+                  Campaign flows reactivate dormant clients with timing and offer logic that feels personal.
+                </div>
+              </div>
+              <div class="rounded-2xl border border-white/10 bg-char/55 p-5">
+                <ul class="space-y-3 text-slate-200">
+                  <li>• Win-back automations triggered by inactivity windows.</li>
+                  <li>• Segment-specific offers for injectables, skin, and membership clients.</li>
+                  <li>• Review and referral nudges that increase repeat value.</li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="tab-panel pointer-events-none absolute inset-0 grid translate-y-3 gap-6 opacity-0 transition-opacity duration-300 md:grid-cols-2" data-panel="2">
+              <div class="glass rounded-2xl p-5">
+                <i data-lucide="clipboard-list" class="h-8 w-8 text-teal"></i>
+                <h3 class="mt-4 text-xl font-semibold text-white">Front Desk Ops System</h3>
+                <p class="mt-2 text-slate-400">Replaces manual tasks: intake forms, consent docs, post-visit sequences.</p>
+                <div class="mt-4 rounded-xl bg-char/70 p-4 text-sm text-slate-300">
+                  Every admin handoff becomes a repeatable system, not a sticky note.
+                </div>
+              </div>
+              <div class="rounded-2xl border border-white/10 bg-char/55 p-5">
+                <ul class="space-y-3 text-slate-200">
+                  <li>• Digital consent and pre-visit workflow orchestration.</li>
+                  <li>• Post-treatment care sequences delivered automatically.</li>
+                  <li>• Internal task queues that remove manual chase-downs.</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="mt-6 grid gap-4 md:grid-cols-2">
+          <div class="rounded-2xl border border-white/10 bg-char/70 p-5">
+            <p class="label-wide text-xs text-slate-400">IMPACT SNAPSHOT</p>
+            <p class="mt-3 text-2xl font-semibold text-white">1 system replaces 3 staff hours per day</p>
+          </div>
+          <div class="rounded-2xl border border-teal/35 bg-char/70 p-5">
+            <p class="label-wide text-xs text-slate-400">OPERATING MODEL</p>
+            <p class="mt-3 text-lg text-slate-200">Built for medspa teams that need precision without adding front-desk complexity.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="roadmap" class="px-4 py-16">
+      <div class="mx-auto max-w-7xl">
+        <div class="mb-8">
+          <p class="label-wide text-xs text-teal">14-DAY DELIVERY</p>
+          <h2 class="mt-2 font-display text-3xl text-white md:text-4xl">Your 14-Day Sprint Roadmap</h2>
+        </div>
+
+        <div class="relative max-w-3xl pl-10">
+          <div class="absolute left-3 top-0 h-full w-[2px] bg-slate-700"></div>
+          <div id="roadmapFill" class="absolute left-3 top-0 h-0 w-[2px] bg-gradient-to-b from-teal to-rose transition-all duration-[1400ms]"></div>
+
+          <div class="road-step mb-8 rounded-2xl border border-white/10 bg-panel/70 p-5">
+            <span class="label-wide text-xs text-rose">DAY 1</span>
+            <h3 class="mt-2 text-xl font-semibold text-white">Audit &amp; Mapping</h3>
+            <p class="mt-2 text-slate-300">We map your full booking-to-follow-up flow and pinpoint where admin leakage starts.</p>
+          </div>
+
+          <div class="road-step mb-8 rounded-2xl border border-white/10 bg-panel/70 p-5">
+            <span class="label-wide text-xs text-rose">DAY 3</span>
+            <h3 class="mt-2 text-xl font-semibold text-white">System Build Begins</h3>
+            <p class="mt-2 text-slate-300">Core automation logic and integrations are implemented asynchronously without pulling your team into meetings.</p>
+          </div>
+
+          <div class="road-step mb-8 rounded-2xl border border-white/10 bg-panel/70 p-5">
+            <span class="label-wide text-xs text-rose">DAY 7</span>
+            <h3 class="mt-2 text-xl font-semibold text-white">First Automation Live</h3>
+            <p class="mt-2 text-slate-300">Your first workflow is deployed and monitored so your team sees operational lift in week one.</p>
+          </div>
+
+          <div class="road-step rounded-2xl border border-teal/40 bg-panel/75 p-5">
+            <span class="label-wide text-xs text-rose">DAY 14</span>
+            <h3 class="mt-2 text-xl font-semibold text-white">Full Handoff</h3>
+            <p class="mt-2 text-slate-300">Complete system delivery with documentation and optimization checklist.</p>
+            <span class="mt-4 inline-block rounded-full border border-teal/45 bg-teal/10 px-3 py-1 text-xs font-semibold text-teal">
+              Zero Meetings Required. 100% Async.
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="portal" class="px-4 py-16">
+      <div class="mx-auto max-w-7xl">
+        <h2 class="font-display text-3xl text-white md:text-4xl">You'll Always Know Where Things Stand</h2>
+        <div class="mt-6 max-w-3xl glass rounded-3xl p-6 shadow-glass">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p class="text-sm text-slate-400">Client Name</p>
+              <p class="text-lg font-semibold text-white">Luminous Aesthetics MedSpa</p>
+            </div>
+            <div class="rounded-full border border-white/15 px-3 py-1 text-sm text-slate-200">Sprint Day: <span class="font-semibold text-teal">Day 7 of 14</span></div>
+          </div>
+          <div class="mt-6">
+            <div class="mb-2 flex justify-between text-sm">
+              <span class="text-slate-400">Progress</span>
+              <span class="font-semibold text-white">68%</span>
+            </div>
+            <div class="h-3 rounded-full bg-char/70">
+              <div class="h-3 w-[68%] rounded-full bg-gradient-to-r from-teal to-rose"></div>
+            </div>
+          </div>
+          <ul class="mt-6 space-y-3 text-sm text-slate-200">
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="h-4 w-4 text-teal"></i> Intake + booking flow mapped</li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="h-4 w-4 text-teal"></i> Reminder sequence activated</li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="h-4 w-4 text-teal"></i> Reactivation campaign in QA</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="px-4 py-16">
+      <div class="mx-auto max-w-7xl">
+        <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+          <h2 class="font-display text-3xl text-white md:text-4xl">Simple One-Time Pricing</h2>
+          <span class="rounded-full border border-rose/45 bg-rose/10 px-3 py-1 text-xs font-semibold text-rose">
+            Built in 14 days. Runs for years.
+          </span>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-2">
+          <article class="rounded-3xl border border-white/10 bg-panel/75 p-6">
+            <p class="label-wide text-xs text-slate-400">QUICK WIN</p>
+            <h3 class="mt-2 text-2xl font-semibold text-white">$2,400 <span class="text-base font-normal text-slate-400">one-time</span></h3>
+            <p class="mt-3 text-slate-300">One automation system (booking + follow-up).</p>
+            <ul class="mt-5 space-y-2 text-sm text-slate-200">
+              <li>• Strategy + implementation</li>
+              <li>• One core workflow fully deployed</li>
+              <li>• Loom handoff with setup guides</li>
+            </ul>
+            <button class="open-intake mt-6 w-full rounded-full bg-white/10 px-4 py-3 font-semibold text-white transition hover:bg-white/20">
+              Select This Package
+            </button>
+          </article>
+
+          <article class="rounded-3xl border border-teal/35 bg-panel/80 p-6 transition hover:shadow-tealGlow">
+            <p class="label-wide text-xs text-teal">FULL MEDSPA OS ⭐ BEST VALUE</p>
+            <h3 class="mt-2 text-2xl font-semibold text-white">$6,900 <span class="text-base font-normal text-slate-400">one-time</span></h3>
+            <p class="mt-3 text-slate-300">All 3 systems + 30-day support.</p>
+            <ul class="mt-5 space-y-2 text-sm text-slate-200">
+              <li>• Booking + intake + retention systems</li>
+              <li>• Front desk ops automation stack</li>
+              <li>• 30-day post-launch support window</li>
+            </ul>
+            <button class="open-intake mt-6 w-full rounded-full bg-teal px-4 py-3 font-semibold text-char transition hover:brightness-110">
+              Select This Package
+            </button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <footer class="border-t border-white/10 px-4 py-10">
+      <div class="mx-auto flex max-w-7xl flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <p class="text-slate-300">Captivate — AI Digital Service Company for MedSpa owners.</p>
+        <p class="text-slate-400">Your front desk doesn't sleep. Neither does ours.</p>
+      </div>
+    </footer>
+  </main>
+
+  <div id="intakeModal" class="fixed inset-0 z-[80] hidden">
+    <div id="modalOverlay" class="absolute inset-0 bg-black/70"></div>
+    <div class="relative mx-auto mt-14 w-[92%] max-w-2xl rounded-3xl border border-white/10 bg-panel p-5 shadow-glass md:mt-20 md:p-6">
+      <div class="mb-5 flex items-center justify-between">
+        <h3 class="text-2xl font-semibold text-white">Smart Intake</h3>
+        <button id="closeModal" class="rounded-lg border border-white/15 p-2 text-slate-300 hover:text-white" aria-label="Close intake modal">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <form id="intakeForm" class="grid gap-4 md:grid-cols-2" novalidate>
+        <div>
+          <label for="name" class="mb-1 block text-sm text-slate-300">Name</label>
+          <input id="name" name="name" type="text" required class="w-full rounded-xl border border-white/15 bg-char/70 px-3 py-2 text-white outline-none focus:border-teal" />
+        </div>
+        <div>
+          <label for="businessName" class="mb-1 block text-sm text-slate-300">Business Name</label>
+          <input id="businessName" name="businessName" type="text" required class="w-full rounded-xl border border-white/15 bg-char/70 px-3 py-2 text-white outline-none focus:border-teal" />
+        </div>
+        <div>
+          <label for="volume" class="mb-1 block text-sm text-slate-300">Monthly Client Volume</label>
+          <select id="volume" name="volume" required class="w-full rounded-xl border border-white/15 bg-char/70 px-3 py-2 text-white outline-none focus:border-teal">
+            <option value="">Select range</option>
+            <option>Under 100</option>
+            <option>100 - 200</option>
+            <option>201 - 350</option>
+            <option>351+</option>
+          </select>
+        </div>
+        <div>
+          <label for="bookingTool" class="mb-1 block text-sm text-slate-300">Current Booking Tool</label>
+          <input id="bookingTool" name="bookingTool" type="text" required placeholder="e.g. Vagaro, GlossGenius, Boulevard" class="w-full rounded-xl border border-white/15 bg-char/70 px-3 py-2 text-white outline-none focus:border-teal" />
+        </div>
+        <div class="md:col-span-2">
+          <label for="videoUrl" class="mb-1 block text-sm text-slate-300">Record a 2-min walk-through of your biggest pain point</label>
+          <input id="videoUrl" name="videoUrl" type="url" required placeholder="https://www.loom.com/share/..." class="w-full rounded-xl border border-white/15 bg-char/70 px-3 py-2 text-white outline-none focus:border-teal" />
+          <p id="urlError" class="mt-1 hidden text-xs text-rose">Please enter a valid URL starting with http:// or https://</p>
+        </div>
+        <div class="md:col-span-2">
+          <label for="email" class="mb-1 block text-sm text-slate-300">Email</label>
+          <input id="email" name="email" type="email" required class="w-full rounded-xl border border-white/15 bg-char/70 px-3 py-2 text-white outline-none focus:border-teal" />
+        </div>
+        <div class="md:col-span-2">
+          <button type="submit" class="w-full rounded-full bg-gradient-to-r from-rose to-teal px-5 py-3 font-semibold text-char">
+            Send My Audit Request
+          </button>
+        </div>
+      </form>
+      <p id="formSuccess" class="mt-3 hidden text-sm text-teal">Thanks! Your audit request has been captured.</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/countup.js@2.8.0/dist/countUp.umd.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const mobileMenu = document.getElementById("mobileMenu");
+    menuToggle?.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
+
+    const bookings = document.getElementById("bookings");
+    const noShowRate = document.getElementById("noShowRate");
+    const adminHours = document.getElementById("adminHours");
+    const bookingsValue = document.getElementById("bookingsValue");
+    const noShowRateValue = document.getElementById("noShowRateValue");
+    const adminHoursValue = document.getElementById("adminHoursValue");
+    const recoverCta = document.getElementById("recoverCta");
+    const calendarWrap = document.getElementById("calendarWrap");
+    const calendlyFrame = document.getElementById("calendlyFrame");
+    let hasInteracted = false;
+
+    const lossCounter = new countUp.CountUp("revenueLoss", 0, {
+      useEasing: true,
+      duration: 0.7,
+      separator: ","
+    });
+    if (!lossCounter.error) {
+      lossCounter.start();
+    }
+
+    function calculateAnnualLoss() {
+      const monthlyBookings = Number(bookings.value);
+      const cancelRate = Number(noShowRate.value) / 100;
+      const weeklyAdminHours = Number(adminHours.value);
+      const avgBookingValue = 190;
+      const adminHourValue = 58;
+
+      const annualNoShowLoss = monthlyBookings * cancelRate * avgBookingValue * 12;
+      const annualAdminLoss = weeklyAdminHours * adminHourValue * 52;
+      return Math.round(annualNoShowLoss + annualAdminLoss);
+    }
+
+    function updateROI() {
+      bookingsValue.textContent = bookings.value;
+      noShowRateValue.textContent = `${noShowRate.value}%`;
+      adminHoursValue.textContent = `${adminHours.value} hrs`;
+      const totalLoss = calculateAnnualLoss();
+      if (!lossCounter.error) {
+        lossCounter.update(totalLoss);
+      } else {
+        document.getElementById("revenueLoss").textContent = totalLoss.toLocaleString();
+      }
+    }
+
+    function revealPrequalified() {
+      if (hasInteracted) return;
+      hasInteracted = true;
+
+      recoverCta.classList.remove("max-h-0", "opacity-0");
+      recoverCta.classList.add("max-h-20", "py-3");
+      calendarWrap.classList.remove("hidden");
+      requestAnimationFrame(() => {
+        calendarWrap.classList.add("opacity-100");
+      });
+
+      if (!calendlyFrame.getAttribute("src")) {
+        calendlyFrame.setAttribute("src", calendlyFrame.dataset.src);
+      }
+    }
+
+    [bookings, noShowRate, adminHours].forEach((input) => {
+      input.addEventListener("input", () => {
+        updateROI();
+        revealPrequalified();
+      });
+    });
+    updateROI();
+
+    recoverCta.addEventListener("click", () => {
+      document.getElementById("pricing").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    const tabs = [...document.querySelectorAll(".service-tab")];
+    const panels = [...document.querySelectorAll("[data-panel]")];
+
+    function setActiveTab(index) {
+      tabs.forEach((tab, i) => {
+        tab.classList.toggle("bg-white/10", i === index);
+        tab.classList.toggle("border-teal/50", i === index);
+        tab.classList.toggle("text-white", i === index);
+      });
+
+      panels.forEach((panel, i) => {
+        if (i === index) {
+          panel.classList.remove("opacity-0", "translate-y-3", "pointer-events-none", "absolute", "inset-0");
+          panel.classList.add("opacity-100", "translate-y-0", "relative");
+        } else {
+          panel.classList.add("opacity-0", "translate-y-3", "pointer-events-none", "absolute", "inset-0");
+          panel.classList.remove("opacity-100", "translate-y-0", "relative");
+        }
+      });
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => setActiveTab(Number(tab.dataset.tab)));
+    });
+    setActiveTab(0);
+
+    const roadmap = document.getElementById("roadmap");
+    const roadmapFill = document.getElementById("roadmapFill");
+    const roadmapSteps = [...document.querySelectorAll(".road-step")];
+
+    const roadmapObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            roadmapFill.style.height = "100%";
+            roadmapSteps.forEach((step, idx) => {
+              setTimeout(() => step.classList.add("visible"), idx * 180);
+            });
+            roadmapObserver.disconnect();
+          }
+        });
+      },
+      { threshold: 0.28 }
+    );
+    roadmapObserver.observe(roadmap);
+
+    const modal = document.getElementById("intakeModal");
+    const closeModalBtn = document.getElementById("closeModal");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const openButtons = document.querySelectorAll(".open-intake");
+    const intakeForm = document.getElementById("intakeForm");
+    const urlField = document.getElementById("videoUrl");
+    const urlError = document.getElementById("urlError");
+    const formSuccess = document.getElementById("formSuccess");
+
+    function openModal() {
+      modal.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+      formSuccess.classList.add("hidden");
+    }
+
+    function closeModal() {
+      modal.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    openButtons.forEach((btn) => btn.addEventListener("click", openModal));
+    closeModalBtn.addEventListener("click", closeModal);
+    modalOverlay.addEventListener("click", closeModal);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !modal.classList.contains("hidden")) {
+        closeModal();
+      }
+    });
+
+    function isValidHttpUrl(value) {
+      try {
+        const url = new URL(value);
+        return url.protocol === "http:" || url.protocol === "https:";
+      } catch {
+        return false;
+      }
+    }
+
+    intakeForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const validUrl = isValidHttpUrl(urlField.value.trim());
+      if (!validUrl) {
+        urlError.classList.remove("hidden");
+        urlField.classList.add("border-rose");
+        return;
+      }
+
+      if (!intakeForm.checkValidity()) {
+        intakeForm.reportValidity();
+        return;
+      }
+
+      urlError.classList.add("hidden");
+      urlField.classList.remove("border-rose");
+      formSuccess.classList.remove("hidden");
+      intakeForm.reset();
+
+      setTimeout(() => {
+        closeModal();
+      }, 1100);
+    });
+
+    urlField.addEventListener("input", () => {
+      if (isValidHttpUrl(urlField.value.trim())) {
+        urlError.classList.add("hidden");
+        urlField.classList.remove("border-rose");
+      }
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
